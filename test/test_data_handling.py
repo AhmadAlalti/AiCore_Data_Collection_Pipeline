@@ -25,24 +25,20 @@ class TestDataHandling(unittest.TestCase):
         
     def test2_save_data_locally(self):
         self.data_handler.save_data_locally(self.test_complete_dictionary)
-        name, extension = os.path.splitext(self.test_path + '/data.json')
-        self.assertEqual(extension, ".json")
-        print('Your file is a json file')
-        
-    def test3_save_data_locally(self):
+        self.assertTrue(os.path.exists(self.test_path + '/data.json'))
         with open(self.test_path + '/data.json', 'r') as all_data:
-            self.complete_data = json.load(all_data) 
-        json_keys = self.complete_data.keys()
+            complete_data = json.load(all_data) 
+        json_keys = complete_data.keys()
         your_dictionary_keys = list(self.test_complete_dictionary.keys())
         self.assertEqual(set(json_keys), set(your_dictionary_keys))
-        print("Json file has the correct keys")
-    
-    def test4_download_image(self):
+        print("Json exists and has the correct keys")
+
+    def test3_download_image(self):
         self.data_handler.download_image(self.test_complete_dictionary)
         self.assertTrue(os.path.exists(self.test_path + '/images'))
         print("Images file path exists")
         
-    def test5_download_image(self):
+    def test4_download_image(self):
         self.data_handler.download_image(self.test_complete_dictionary)
         image_files_list = os.listdir(self.test_path + '/images')
         for file_name in image_files_list :
