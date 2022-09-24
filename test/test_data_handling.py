@@ -51,7 +51,6 @@ class TestDataHandling(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree("../test_raw_data_path")
-        pass
-        
+                
 if __name__ == "__main__":
     unittest.main()
