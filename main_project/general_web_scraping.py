@@ -47,7 +47,7 @@ class GeneralScraper():
         
         '''
         try:
-            self.driver.switch_to_frame(iframe_id)
+            self.driver.switch_to.frame(iframe_id)
         except:
             pass
         try:
