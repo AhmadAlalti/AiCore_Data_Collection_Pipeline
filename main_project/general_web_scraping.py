@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # This class is a general scraper that can be used to scrape any website.
 class GeneralScraper():
 
-    def __init__(self, URL, *args, **kwargss):
+    def __init__(self, URL, *args, **kwargs):
         '''The function takes in a URL, and then opens a webdriver in Safari, and then goes to the URL
         
         Parameters
@@ -19,7 +19,7 @@ class GeneralScraper():
             The URL of the website you want to scrape
         
         '''
-        super(GeneralScraper, self).__init__(*args, **kwargss)
+        super(GeneralScraper, self).__init__(*args, **kwargs)
         self.driver = webdriver.Safari()
         self.driver.get(URL)
 
