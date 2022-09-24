@@ -24,10 +24,9 @@ class DataHandling():
         
         '''
         try:
-            raw_data_directory = os.mkdir(self.raw_data_path)
+            os.mkdir(self.raw_data_path)
         except FileExistsError:
             print("File already exists")
-        return raw_data_directory
     
     def save_data_locally(self, complete_properties_data):
         '''It takes the data from the API and saves it locally as a JSON file.
