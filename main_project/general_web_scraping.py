@@ -124,6 +124,7 @@ class GeneralScraper():
             self.all_object_list.extend(self.get_object_links(container_xpath, objects_list_relative_xpath))
             next_button = self.driver.find_element(by=By.XPATH, value=next_button_xpath)
             self.driver.execute_script("arguments[0].click();", next_button)
+            time.sleep(5)
 
 
     def get_properties(self, dict_properties):
