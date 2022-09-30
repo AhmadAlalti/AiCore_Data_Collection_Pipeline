@@ -26,8 +26,8 @@ class MyProtein(general_web_scraping.GeneralScraper, data_handling.DataHandling)
         dict_data = self.get_properties(configuration_file.DICT_PROPERTIES)
         complete_dict = self.generate_uuid(dict_data)
         self.create_raw_data_folder()
-        self.save_data_locally(complete_dict)
-        self.download_image(complete_dict)
+        self.save_data_locally(complete_dict, configuration_file.BUCKET_NAME)
+        self.download_image(complete_dict, configuration_file.BUCKET_NAME)
 
 # A way to run the main function in a Python script.
 if __name__ == "__main__":
