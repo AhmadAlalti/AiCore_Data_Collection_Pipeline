@@ -40,7 +40,5 @@ DICT_PROPERTIES = {
     'Unique_ID':('//input[@name="prodId"]', 'value') 
     }
 
-# This is the path to the folder where the raw data will be stored.
-RAW_DATA_PATH = '../raw_data'
-
+# This is the name of the bucket that the data will be stored in.
 BUCKET_NAME = 'aicoredatacollectionbucket'
