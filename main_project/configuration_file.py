@@ -42,3 +42,5 @@ DICT_PROPERTIES = {
 
 # This is the path to the folder where the raw data will be stored.
 RAW_DATA_PATH = '../raw_data'
+
+BUCKET_NAME = 'aicoredatacollectionbucket'
