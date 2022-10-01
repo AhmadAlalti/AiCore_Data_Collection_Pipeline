@@ -27,6 +27,7 @@ class MyProtein(general_web_scraping.GeneralScraper, data_handling.DataHandling)
         complete_dict = self.generate_uuid(dict_data)
         self.save_data(complete_dict)
         self.download_image(complete_dict)
+        self.data_to_db()
 
 # A way to run the main function in a Python script.
 if __name__ == "__main__":
