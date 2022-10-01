@@ -20,6 +20,7 @@ class GeneralScraper():
         
         '''
         super(GeneralScraper, self).__init__(*args, **kwargs)
+        print("------Are you ready to scrape?!------Let's do this!------")
         self.driver = webdriver.Safari()
         self.driver.get(URL)
 
