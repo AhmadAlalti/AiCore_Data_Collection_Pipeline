@@ -3,19 +3,21 @@ import json
 import urllib.request
 import tempfile
 import pandas as pd
+from pydantic import validate_arguments
 from sqlalchemy import create_engine
 
 class DataHandling():
     
+    @validate_arguments
     def __init__(self, bucket_name: str, *args, **kwargss):
         
         
-        '''This class handles the data with connection to the cloud (AWS RDS and S3)
+        '''This class handles the data with connection to the cloud
         
         Parameters
         ----------
         bucket_name : str
-            The name of the bucket you want to upload to
+            The name of the S3 bucket you want to upload to
         '''
         
         
@@ -32,11 +34,11 @@ class DataHandling():
         self.engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}", pool_pre_ping=True)
     
     
-    
+    @validate_arguments
     def save_data(self, complete_properties_data: dict):
         
         
-        '''It takes a dictionary of data, dumps it into a temporary file, and then uploads that file to S3
+        '''It takes a dictionary of data, dumps it into a temporary file, and then uploads that file to the cloud
         
         Parameters
         ----------
@@ -51,12 +53,12 @@ class DataHandling():
         self.s3_client.upload_file(self.temp_file.name, self.bucket_name, 'data.json')     
 
 
-
+    @validate_arguments
     def download_image(self, complete_properties_data: dict):
         
         
         '''Downloads the images from the link in the dictionary and uploads it to
-        the S3 bucket
+        the cloud
         
         Parameters
         ----------
