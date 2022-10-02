@@ -1,93 +1,120 @@
-# Importing the necessary libraries for the class to work.
 import time
 import uuid
+from pydantic import validate_arguments
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# This class is a general scraper that can be used to scrape any website.
 class GeneralScraper():
 
-    def __init__(self, URL, *args, **kwargs):
-        '''The function takes in a URL, and then opens a webdriver in Safari, and then goes to the URL
+    @validate_arguments
+    def __init__(self, URL: str, *args, **kwargs):
+        
+        
+        '''This class is a geenral scraper that can be used to scrape any website
         
         Parameters
         ----------
-        URL
-            The URL of the website you want to scrape
-        
+        URL : str
+            A string of the URL of the website you want to scrape
         '''
+        
+        
         super(GeneralScraper, self).__init__(*args, **kwargs)
         print("------Are you ready to scrape?!------Let's do this!------")
         self.driver = webdriver.Safari()
         self.driver.get(URL)
 
-    def close_signup(self, signup_close_button_xpath):
+
+
+    @validate_arguments
+    def close_signup(self, signup_close_button_xpath: str):
+        
+        
         '''This function waits for the signup button to be clickable, then clicks it
         
         Parameters
         ----------
-        signup_close_button_xpath
-            The xpath of the close button on the signup modal
-        
+        signup_close_button_xpath : str
+            A string of the xpath of the close button on the signup modal
         '''
-        signup_button = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, signup_close_button_xpath)))
-        signup_button.click()
+        
+        
+        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, signup_close_button_xpath))).click()
+        print("Signup pop up has been closed")
     
-    def accept_cookies(self, iframe_id, accept_cookies_button_xpath):
+    
+    
+    @validate_arguments
+    def accept_cookies(self, iframe_id: str, accept_cookies_button_xpath: str):
+        
+        
         '''It switches to the iframe if provided, waits for the accept cookies button to be clickable, and then clicks it
         
         Parameters
         ----------
-        iframe_id
-            The id of the iframe that contains the cookie consent button.
-        accept_cookies_button_xpath
-            The xpath of the button that accepts cookies.
-        
+        iframe_id : str
+            A string of the id of the iframe that contains the cookie consent button
+        accept_cookies_button_xpath : str
+            A string of he xpath of the button that accepts cookies
         '''
+        
+        
         try:
             self.driver.switch_to.frame(iframe_id)
         except:
             pass
+        
         try:
             accept_cookies_button = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, accept_cookies_button_xpath)))
             accept_cookies_button.click()
         except:
             pass
 
-    def open_desired_category_link(self, desired_category_xpath):
-        '''It takes in a desired category xpath, finds the a tag element, scrolls to it, and then gets the href
-        attribute of the a tag element
+
+
+    @validate_arguments
+    def open_desired_category_link(self, desired_category_xpath: str):
+       
+        
+        '''Finds the category you want to scrape and opens its link
         
         Parameters
         ----------
-        desired_category_xpath
-            The xpath of the category you want to open.
-        
+        desired_category_xpath : str
+            The xpath of the category you want to open
         '''
+        
+        
         category_a_tag = self.driver.find_element(by=By.XPATH, value=desired_category_xpath)
         self.driver.execute_script("arguments[0].scrollIntoView();", category_a_tag)
         self.category_link = category_a_tag.get_attribute('href')
-        return self.driver.get(self.category_link)
+        self.driver.get(self.category_link)
 
-    def get_object_links(self, container_xpath, objects_list_relative_xpath):
-        '''It takes a container xpath and a relative xpath to the objects you want to get the links from, and
-        returns a list of links
+
+
+    @validate_arguments
+    def get_object_links(self, container_xpath: str, objects_list_relative_xpath: str):
+        
+        
+        '''A function that gets the links of the objects you want and stores them in a list
         
         Parameters
         ----------
-        container_xpath
-            the xpath of the container that holds the list of objects
-        objects_list_relative_xpath
-            This is the xpath of the list of objects that you want to get the links for.
+        container_xpath : str
+            A string of the xpath of the container that holds the list of objects
+        objects_list_relative_xpath : str
+            A string of the xpath of the list of objects that you want to get the links for
         
         Returns
         -------
-            A list of links
-        
+        list
+            A list of links representing each object to be scraped
         '''
+        
+        
         container = WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH, container_xpath)))
         object_list = container.find_elements(by=By.XPATH, value=objects_list_relative_xpath) 
         links = []
@@ -98,56 +125,68 @@ class GeneralScraper():
             links.append(link)
         return links
     
-    def get_all_objects(self, pages, container_xpath, objects_list_relative_xpath, next_button_xpath):
-        '''This function takes in the number of pages to scrape, the xpath of the container that holds the
-        objects, the xpath of the objects relative to the container, and the xpath of the next button. It
-        then returns a list of all the objects on all the pages
+    
+    
+    @validate_arguments
+    def get_all_objects(self, pages: int, container_xpath: str, objects_list_relative_xpath: str, next_button_xpath: str):
+       
+       
+        '''This function moves through pages and gets the links of all the objects to be scraped
         
         Parameters
         ----------
-        pages
+        pages : int
             number of pages to scrape
-        container_xpath
+        container_xpath : str
             the xpath of the container that holds the objects you want to scrape
-        objects_list_relative_xpath
+        objects_list_relative_xpath : str
             the xpath of the list of objects relative to the container_xpath
-        next_button_xpath
+        next_button_xpath : str
             the xpath of the next button
         
         Returns
         -------
-            A list of all the objects on the page.
-        
+        list
+            A list of all the object links on the different pages
         '''
+        
+        
         self.all_object_list = []
         self.pages = pages
-        for i in range(self.pages): 
+        
+        for page in range(self.pages): 
             self.all_object_list.extend(self.get_object_links(container_xpath, objects_list_relative_xpath))
             next_button = self.driver.find_element(by=By.XPATH, value=next_button_xpath)
             self.driver.execute_script("arguments[0].click();", next_button)
             time.sleep(5)
 
 
-    def get_properties(self, dict_properties):
+
+    @validate_arguments
+    def get_properties(self, dict_properties: dict):
+        
+        
         '''The function takes a dictionary of properties as input, and returns a dictionary of properties with
         the values scraped from the website
         
         Parameters
         ----------
-        dict_properties
-            This is a dictionary of the properties that you want to scrape. The key is the name of the property
-        and the value is a tuple of the xpath and the attribute that you want to scrape.
+        dict_properties : dict
+            This is a dictionary of the properties that you want to scrape
         
         Returns
         -------
             A dictionary with the keys being the property names and the values being a list of the property
-        values.
-        
+        values
         '''
+        
+        
         properties_data = {k: [] for k in dict_properties.keys()}
+        
         for link in self.all_object_list[:2]:
             self.driver.get(link)
             time.sleep(2)
+            
             for key, value in dict_properties.items():
                 try:
                     if value[1] == 'text':
@@ -158,23 +197,33 @@ class GeneralScraper():
                         properties_data[key].append(property_value.strip())
                 except:
                         properties_data[key].append("Not Applicable")     
+                        
         return properties_data
 
-    def generate_uuid(self, complete_properties_data):
+
+
+    @validate_arguments
+    def generate_uuid(self, complete_properties_data: dict):
+        
+        
         '''This function generates a UUID for each object in the list of objects
         
         Parameters
         ----------
-        complete_properties_data
-            This is a dictionary that contains all the properties of the object.
+        complete_properties_data : dict
+            This is a dictionary that contains all the properties of the object
         
         Returns
         -------
-            The complete_properties_data dictionary is being returned with the UUIDs now added.
-        
+        dict
+            The complete_properties_data dictionary is being returned with the UUIDs now added
         '''
+        
+        
         complete_properties_data['UUID'] = []
+        
         for link in self.all_object_list[:2]:
             object_uuid = str(uuid.uuid4())
             complete_properties_data['UUID'].append(object_uuid)
+            
         return complete_properties_data
