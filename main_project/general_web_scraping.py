@@ -48,7 +48,7 @@ class GeneralScraper():
     
     
     @validate_arguments
-    def accept_cookies(self, iframe_id: str, accept_cookies_button_xpath: str):
+    def accept_cookies(self, iframe_id: None, accept_cookies_button_xpath: str):
         
         
         '''It switches to the iframe if provided, waits for the accept cookies button to be clickable, and then clicks it

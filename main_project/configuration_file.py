@@ -8,6 +8,7 @@ URL = "https://www.myprotein.com"
 SIGN_UP_CLOSE_BUTTON_XPATH = "//button[@class='emailReengagement_close_button']"
 
 # Setting the iframe_id variable to the id attribute of the iframe containing the accept cookies button.
+# In this case there is no frame to switch to so the value is none.
 IFRAME_ID = None
 
 # This is the xpath of the button that accepts cookies.

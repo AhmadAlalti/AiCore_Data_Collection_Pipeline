@@ -1,23 +1,26 @@
-# Importing the modules that are needed for the class to work.
 import general_web_scraping
 import data_handling
 import configuration_file
+from pydantic import validate_arguments
 
-# This class inherits from the GeneralScraper class and the DataHandling class.
+
 class MyProtein(general_web_scraping.GeneralScraper, data_handling.DataHandling):
 
-    def __init__(self, URL, bucket_name):
-        '''The above function is the constructor of the class MyProtein. It is called when an object of the
-        class is created.
+    @validate_arguments
+    def __init__(self, URL: str, bucket_name: str):
+        
+        
+        '''The class inherits 2 classes and runs them together to scrape and handle data
         
         Parameters
         ----------
-        URL
+        URL : str
             The URL of the website you want to scrape.
-        raw_data_path
-            The path where you want to save the raw data.
-        
+        bucket_name : str
+            A string of the bucket name where you want to save your data
         '''
+        
+        
         super(MyProtein, self).__init__(URL, bucket_name)
         self.close_signup(configuration_file.SIGN_UP_CLOSE_BUTTON_XPATH)
         self.accept_cookies(configuration_file.IFRAME_ID, configuration_file.ACCEPT_COOKIES_BUTTON_XPATH)
@@ -29,6 +32,7 @@ class MyProtein(general_web_scraping.GeneralScraper, data_handling.DataHandling)
         self.download_image(complete_dict)
         self.data_to_db()
 
-# A way to run the main function in a Python script.
+
+
 if __name__ == "__main__":
     MyProtein(configuration_file.URL, configuration_file.BUCKET_NAME)
