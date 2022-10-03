@@ -50,7 +50,8 @@ class DataHandling():
         self.temp_file = tempfile.NamedTemporaryFile(mode="w+")
         json.dump(complete_properties_data, self.temp_file, indent=4)
         self.temp_file.flush()
-        self.s3_client.upload_file(self.temp_file.name, self.bucket_name, 'data.json')     
+        self.s3_client.upload_file(self.temp_file.name, self.bucket_name, 'data.json')
+        print("Data has been saved to s3 bucket")     
 
 
     @validate_arguments
@@ -69,11 +70,14 @@ class DataHandling():
         
         image_name_and_link = zip(complete_properties_data["Unique_ID"], complete_properties_data["Product_Image"])
         self.s3_client.put_object(Bucket=self.bucket_name, Key=('images/'))
+        
         for image_data in image_name_and_link:
             with tempfile.TemporaryDirectory() as tmpdir:
                 # with open(image_path + f'{image_data[0]}.jpg', 'w'):
                 urllib.request.urlretrieve(image_data[1], tmpdir+ f'{image_data[0]}.jpg')
                 self.s3_client.upload_file(tmpdir + f'{image_data[0]}.jpg', self.bucket_name, 'images/{}'.format(f'{image_data[0]}.jpg'))
+        
+        print("Images have been downloaded and uploaded to s3 bucket")
     
     
     
@@ -87,3 +91,4 @@ class DataHandling():
         df = pd.read_json(self.temp_file.name)
         self.engine.connect()
         df.to_sql('objects_data', con=self.engine, if_exists='replace')
+        print("Database was uploaded to RDS")

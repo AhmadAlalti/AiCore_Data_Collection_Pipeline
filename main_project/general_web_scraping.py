@@ -5,6 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 
 class GeneralScraper():
@@ -24,7 +27,9 @@ class GeneralScraper():
         
         super(GeneralScraper, self).__init__(*args, **kwargs)
         print("------Are you ready to scrape?!------Let's do this!------")
-        self.driver = webdriver.Safari()
+        options = Options()
+        options.headless = True        
+        self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         self.driver.get(URL)
 
 
@@ -64,12 +69,13 @@ class GeneralScraper():
         
         try:
             self.driver.switch_to.frame(iframe_id)
+            print("Switched to the correct iframe if any")
         except:
             pass
         
         try:
-            accept_cookies_button = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, accept_cookies_button_xpath)))
-            accept_cookies_button.click()
+            WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, accept_cookies_button_xpath))).click()
+            print("Accept cookies button has been clicked")
         except:
             pass
 
@@ -92,6 +98,7 @@ class GeneralScraper():
         self.driver.execute_script("arguments[0].scrollIntoView();", category_a_tag)
         self.category_link = category_a_tag.get_attribute('href')
         self.driver.get(self.category_link)
+        print("Desired category link was opened")
 
 
 
@@ -123,8 +130,9 @@ class GeneralScraper():
             a_tag = product.find_element(by=By.TAG_NAME, value='a')
             link = a_tag.get_attribute('href')
             links.append(link)
+        
+        print("The links of the objects on this page have been saved")
         return links
-    
     
     
     @validate_arguments
@@ -154,11 +162,14 @@ class GeneralScraper():
         self.all_object_list = []
         self.pages = pages
         
+        self.all_object_list.extend(self.get_object_links(container_xpath, objects_list_relative_xpath))
+        
         for page in range(self.pages): 
-            self.all_object_list.extend(self.get_object_links(container_xpath, objects_list_relative_xpath))
             next_button = self.driver.find_element(by=By.XPATH, value=next_button_xpath)
             self.driver.execute_script("arguments[0].click();", next_button)
+            print("The next page was opened")
             time.sleep(5)
+            self.all_object_list.extend(self.get_object_links(container_xpath, objects_list_relative_xpath))     
 
 
 
@@ -185,6 +196,7 @@ class GeneralScraper():
         
         for link in self.all_object_list[:2]:
             self.driver.get(link)
+            print("Opened the link of the object to scrape")
             time.sleep(2)
             
             for key, value in dict_properties.items():
@@ -197,7 +209,9 @@ class GeneralScraper():
                         properties_data[key].append(property_value.strip())
                 except:
                         properties_data[key].append("Not Applicable")     
-                        
+            
+            print("Properties of the object were saved")
+                
         return properties_data
 
 
@@ -225,5 +239,7 @@ class GeneralScraper():
         for link in self.all_object_list[:2]:
             object_uuid = str(uuid.uuid4())
             complete_properties_data['UUID'].append(object_uuid)
+        
+        print("A UUID for your objects has been generated")
             
         return complete_properties_data
