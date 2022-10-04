@@ -13,6 +13,7 @@ from sqlalchemy import create_engine
 
 class DataHandling(GeneralScraper):
     
+    @validate_arguments
     def __init__(self, URL: str, bucket_name: str, *args, **kwargss):
 
         super(DataHandling, self).__init__(URL, *args, **kwargss)
@@ -58,6 +59,9 @@ class DataHandling(GeneralScraper):
                     
         return properties_data_uuid
 
+
+
+    @validate_arguments
     def save_image(self, complete_dict: dict):
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -66,6 +70,7 @@ class DataHandling(GeneralScraper):
 
 
 
+    @validate_arguments
     def save_properties(self, dict_properties: dict):
         
         dict_of_data = self.get_properties(dict_properties)
@@ -76,18 +81,26 @@ class DataHandling(GeneralScraper):
         self.s3_client.upload_file(self.temp_file.name, self.bucket_name, 'json_data/{}'.format(f'{self.complete_dict["Unique_ID"]}_data.json'))                   
     
 
+
+    @validate_arguments
     def create_df(self, dict_properties: dict):
+        
         list_of_dict_keys = [*dict_properties]
         self.list_of_columns = list_of_dict_keys + ["UUID"]
         self.df_initial = pd.DataFrame(columns=self.list_of_columns)
         self.engine.connect()
         self.df_initial.to_sql('objects_data', con=self.engine, if_exists='append', index=False)
     
+    
+    
     def get_unique_id(self):
+        
         self.df_with_id = pd.read_sql_query("SELECT * FROM objects_data", self.engine)
         self.unique_id_list = self.df_with_id['Unique_ID'].values.tolist()
-        print(self.unique_id_list)
 
+
+
+    @validate_arguments
     def get_and_upload_all_data(self, all_objects_list: list, dict_properties: dict):
                 
         for link in all_objects_list[:4]:
