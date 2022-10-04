@@ -25,7 +25,7 @@ OBJECT_LIST_RELATIVE_XPATH = './li[contains(@class, "productListProducts_product
 
 # Setting the number of pages you would like to get the objects of scraped. (page=1 means that it will
 # only scrape 1 page and so on)
-PAGES = 2
+PAGES = 0
 
 # This is the xpath of the button that will take you to the next page.
 NEXT_BUTTON_XPATH = '//button[contains(@class, "NavigationButtonNext")]'

@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 class GeneralScraper():
 
+    @validate_arguments
     def __init__(self, URL: str):
         
         
@@ -23,11 +24,10 @@ class GeneralScraper():
         '''
         
         
-        # super(GeneralScraper, self).__init__(*args, **kwargs)
         print("------Are you ready to scrape?!------Let's do this!------")
-        # options = Options()
-        # options.headless = True        
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        options = Options()
+        options.headless = True        
+        self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         self.driver.get(URL)
 
 
@@ -159,7 +159,6 @@ class GeneralScraper():
         
         all_objects_list = []
         self.pages = pages
-        
         all_objects_list.extend(self.get_object_links(container_xpath, objects_list_relative_xpath))
         
         for page in range(self.pages): 
