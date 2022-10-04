@@ -10,6 +10,7 @@ from pydantic import validate_arguments
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
 
+
 class DataHandling(GeneralScraper):
     
     def __init__(self, URL: str, bucket_name: str, *args, **kwargss):
@@ -26,9 +27,8 @@ class DataHandling(GeneralScraper):
         DATABASE = 'postgres'
         self.engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}", pool_pre_ping=True)
         
-    
-    
-    
+
+
     @validate_arguments
     def get_properties(self, dict_properties: dict):
         
@@ -73,37 +73,34 @@ class DataHandling(GeneralScraper):
         self.temp_file = tempfile.NamedTemporaryFile(mode="w+")
         json.dump(self.complete_dict, self.temp_file, indent=4)
         self.temp_file.flush()
-        self.s3_client.upload_file(self.temp_file.name, self.bucket_name, 'json_data/{}'.format(f'{self.complete_dict["Unique_ID"]}_data.json'))           
-
-
-    # def append_data_to_df(self, df: pd.DataFrame):
-        
+        self.s3_client.upload_file(self.temp_file.name, self.bucket_name, 'json_data/{}'.format(f'{self.complete_dict["Unique_ID"]}_data.json'))                   
     
 
+    def create_df(self, dict_properties: dict):
+        list_of_dict_keys = [*dict_properties]
+        self.list_of_columns = list_of_dict_keys + ["UUID"]
+        self.df_initial = pd.DataFrame(columns=self.list_of_columns)
+        self.engine.connect()
+        self.df_initial.to_sql('objects_data', con=self.engine, if_exists='append', index=False)
+    
+    def get_unique_id(self):
+        self.df_with_id = pd.read_sql_query("SELECT * FROM objects_data", self.engine)
+        self.unique_id_list = self.df_with_id['Unique_ID'].values.tolist()
+        print(self.unique_id_list)
+
     def get_and_upload_all_data(self, all_objects_list: list, dict_properties: dict):
-        
-        df = pd.DataFrame(columns=dict_properties.keys())
-        
-        for link in all_objects_list[:3]:
+                
+        for link in all_objects_list[:4]:
             self.driver.get(link)
             time.sleep(2)
             self.save_properties(dict_properties)
-            df_dictionary = pd.DataFrame(self.complete_dict)
-            df = pd.concat((df, df_dictionary), ignore_index=True)
-            self.save_image(self.complete_dict)
-
-        return print(df)
-    
-    
-    
-    # def data_to_db(self):
-        
-        
-    #     '''It reads the JSON file into a pandas dataframe, then writes the dataframe to a postgreSQL database
-    #     '''
-        
-        
-    #     df = pd.read_json(self.temp_file.name)
-    #     self.engine.connect()
-    #     df.to_sql('objects_data', con=self.engine, if_exists='replace')
-    #     print("Database was uploaded to RDS")
+            
+            if self.complete_dict["Unique_ID"] in self.unique_id_list:
+                pass
+            else:
+                df_dictionary = pd.DataFrame(self.complete_dict)
+                print(df_dictionary)
+                self.engine.connect()
+                df_dictionary.to_sql('objects_data', con=self.engine, if_exists='append', index=False)
+                self.save_image(self.complete_dict)
+                self.unique_id_list.append(self.complete_dict["Unique_ID"])
