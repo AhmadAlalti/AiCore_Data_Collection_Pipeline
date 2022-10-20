@@ -5,7 +5,7 @@ import tempfile
 import time
 import urllib.request
 import uuid
-from general_web_scraping import GeneralScraper
+from main_project.general_web_scraping import GeneralScraper
 from pydantic import validate_arguments
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
