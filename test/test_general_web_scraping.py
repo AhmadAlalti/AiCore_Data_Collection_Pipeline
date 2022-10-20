@@ -11,14 +11,14 @@ class TestGeneralScraper(unittest.TestCase):
     def setUpClass(cls):
         URL = "https://www.myprotein.com"
         cls.scraper = GeneralScraper(URL)   
-        cls.test_dict_properties = {
-            'Name': ('//h1[@class="productName_title"]', 'text'), 
-            'Starting_Price': ('//p[@data-product-price="price"]', 'text'), 
-            'Flavour_Selected': ('//select[@id="athena-product-variation-dropdown-5"]//option[@selected]', 'text'), 
-            'Stars': ('//span[@class="athenaProductReviews_aggregateRatingValue"]', 'text'), 
-            'Product_Image':('//img[@class="athenaProductImageCarousel_image"]', 'src'), 
-            'Unique_ID':('//input[@name="prodId"]', 'value') 
-            }     
+        # cls.test_dict_properties = {
+        #     'Name': ('//h1[@class="productName_title"]', 'text'), 
+        #     'Starting_Price': ('//p[@data-product-price="price"]', 'text'), 
+        #     'Flavour_Selected': ('//select[@id="athena-product-variation-dropdown-5"]//option[@selected]', 'text'), 
+        #     'Stars': ('//span[@class="athenaProductReviews_aggregateRatingValue"]', 'text'), 
+        #     'Product_Image':('//img[@class="athenaProductImageCarousel_image"]', 'src'), 
+        #     'Unique_ID':('//input[@name="prodId"]', 'value') 
+        #     }     
     
     def test1_close_signup(self):
         self.scraper.close_signup("//button[@class='emailReengagement_close_button']")
@@ -46,22 +46,22 @@ class TestGeneralScraper(unittest.TestCase):
         print("A list of links on the page was returned successfully")
     
     def test5_get_all_objects(self):
-        self.scraper.get_all_objects(2, '//*[@id="mainContent"]/div[3]/ul', './li[contains(@class, "productListProducts_product")]', '//button[contains(@class, "NavigationButtonNext")]')
-        self.assertTrue(len(self.__class__.links) < len(self.scraper.all_object_list))
+        all_objects_list = self.scraper.get_all_objects(2, '//*[@id="mainContent"]/div[3]/ul', './li[contains(@class, "productListProducts_product")]', '//button[contains(@class, "NavigationButtonNext")]')
+        self.assertTrue(len(self.__class__.links) < len(all_objects_list))
         print("A list of all the objects on the desired pages was returned correctly")
         
-    def test6_get_properties(self):
-        self.__class__.test_properties_data = self.scraper.get_properties(self.test_dict_properties)
-        self.assertIsInstance(self.__class__.test_properties_data, dict)
-        test_properties_data_keys = self.__class__.test_properties_data.keys()
-        your_dictionary_keys = list(self.test_dict_properties.keys())
-        self.assertEqual(set(test_properties_data_keys), set(your_dictionary_keys))
-        print("A dictionary of the properties has been created with the right keys")
+    # def test6_get_properties(self):
+    #     self.__class__.test_properties_data = self.scraper.get_properties(self.test_dict_properties)
+    #     self.assertIsInstance(self.__class__.test_properties_data, dict)
+    #     test_properties_data_keys = self.__class__.test_properties_data.keys()
+    #     your_dictionary_keys = list(self.test_dict_properties.keys())
+    #     self.assertEqual(set(test_properties_data_keys), set(your_dictionary_keys))
+    #     print("A dictionary of the properties has been created with the right keys")
     
-    def test7_generate_uuid(self):
-        complete_dict = self.scraper.generate_uuid(self.__class__.test_properties_data)
-        self.assertIn("UUID", complete_dict)
-        print("A new complete dict has been created with a new UUID key")
+    # def test7_generate_uuid(self):
+    #     complete_dict = self.scraper.generate_uuid(self.__class__.test_properties_data)
+    #     self.assertIn("UUID", complete_dict)
+    #     print("A new complete dict has been created with a new UUID key")
     
     @classmethod
     def tearDownClass(cls):
