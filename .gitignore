@@ -128,5 +128,3 @@ dmypy.json
 # Pyre type checker
 .pyre/
 raw_data
-WIP_data_handling_locally.py
-WIP_test_data_handling_locally.py
