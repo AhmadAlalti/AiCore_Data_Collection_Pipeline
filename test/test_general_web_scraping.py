@@ -1,9 +1,8 @@
 import sys
-import time
-sys.path.append("..")
 import unittest
 from main_project.general_web_scraping import GeneralScraper
 from selenium.webdriver.common.by import By
+sys.path.append("..")
 
 
 
