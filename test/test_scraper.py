@@ -1,8 +1,7 @@
 import sys
 sys.path.append("..")
 import unittest
-from main_project.general_web_scraping import GeneralScraper
-from main_project.data_handling import DataHandling
+from main_project.cloud.data_handling_cloud import DataHandlingCloud
 from selenium.webdriver.common.by import By
 
 
@@ -14,7 +13,7 @@ class TestGeneralScraper(unittest.TestCase):
         
         URL = "https://www.myprotein.com"
         bucket_name = 'aicoredatacollectionbucket'
-        cls.scraper = DataHandling(URL, bucket_name)
+        cls.scraper = DataHandlingCloud(URL, bucket_name)
         cls.test_dict_properties = {
             'Name': ('//h1[@class="productName_title"]', 'text'), 
             'Starting_Price': ('//p[@data-product-price="price"]', 'text'), 

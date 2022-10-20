@@ -1,9 +1,11 @@
-import configuration_file
-from data_handling import DataHandling
+import sys
+sys.path.append("../..")
+from main_project import configuration_file
+from main_project.cloud.data_handling_cloud import DataHandlingCloud
 from pydantic import validate_arguments
 
 
-class MyProtein(DataHandling):
+class MyProtein(DataHandlingCloud):
 
     @validate_arguments
     def __init__(self, URL: str, bucket_name: str):

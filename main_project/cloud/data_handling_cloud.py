@@ -5,14 +5,14 @@ import tempfile
 import time
 import urllib.request
 import uuid
-from main_project.general_web_scraping import GeneralScraper
+from main_project.cloud.general_web_scraping_cloud import GeneralScraperCloud
 from pydantic import validate_arguments
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
 
 
 
-class DataHandling(GeneralScraper):
+class DataHandlingCloud(GeneralScraperCloud):
     
     @validate_arguments
     def __init__(self, URL: str, bucket_name: str, *args, **kwargss):
@@ -29,7 +29,7 @@ class DataHandling(GeneralScraper):
         '''
 
 
-        super(DataHandling, self).__init__(URL, *args, **kwargss)
+        super(DataHandlingCloud, self).__init__(URL, *args, **kwargss)
         self.s3_client = boto3.client('s3')
         self.bucket_name = bucket_name
         DATABASE_TYPE = 'postgresql'

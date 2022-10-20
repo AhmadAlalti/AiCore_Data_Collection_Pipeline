@@ -9,7 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 
-class GeneralScraper():
+class GeneralScraperCloud():
 
     @validate_arguments
     def __init__(self, URL: str):
