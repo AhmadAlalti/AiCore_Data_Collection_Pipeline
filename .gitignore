@@ -128,3 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 raw_data
+/main_project/cloud
+/test/test_cloud.py
