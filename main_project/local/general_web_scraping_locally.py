@@ -27,7 +27,10 @@ class GeneralScraperLocal():
         super(GeneralScraperLocal, self).__init__(*args, **kwargs)
         print("------Are you ready to scrape?!------Let's do this!------")
         options = Options()
-        options.headless = True        
+        options.headless = True    
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-dev-shm-usage")        
         self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         self.driver.get(URL)
 
@@ -192,7 +195,7 @@ class GeneralScraperLocal():
         
         properties_data = {k: [] for k in dict_properties.keys()}
 
-        for link in self.all_objects_list[:2]:
+        for link in self.all_objects_list[:5]:
             self.driver.get(link)
             time.sleep(2)
             
@@ -230,7 +233,7 @@ class GeneralScraperLocal():
         
         complete_properties_data['UUID'] = []
         
-        for link in self.all_objects_list[:2]:
+        for link in self.all_objects_list[:5]:
             
             object_uuid = str(uuid.uuid4())
             complete_properties_data['UUID'].append(object_uuid)

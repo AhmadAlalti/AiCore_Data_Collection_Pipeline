@@ -33,8 +33,8 @@ class DataHandlingLocal():
         
         try:
             os.mkdir(self.raw_data_path)
-        except FileExistsError as error:
-            print(error)
+        except FileExistsError:
+            pass
     
     
     
