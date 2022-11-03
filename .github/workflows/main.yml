@@ -28,4 +28,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ahmadalalti/aicore_data_collection_pipeline:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/aicore_data_collection_pipeline:latest
