@@ -4,13 +4,13 @@ import shutil
 import sys
 sys.path.append("..")
 import unittest
-from main_project.data_handling_cloud import DataHandling
+from main_project.local.data_handling_locally import DataHandlingLocal
 
 class TestDataHandling(unittest.TestCase):
     
     def setUp(self):
         self.test_path = "../test_raw_data_path"
-        self.data_handler = DataHandling(self.test_path)
+        self.data_handler = DataHandlingLocal(self.test_path)
         self.test_complete_dictionary = { 
             "Name" : "",
             "Unique_ID" : ["10530943", "12081395"], 
